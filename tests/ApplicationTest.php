@@ -2,7 +2,7 @@
 
 namespace Silly\Edition\Pimple\Test;
 
-use Pimple\Container;
+use Interop\Container\Pimple\PimpleInterop;
 use Silly\Edition\Pimple\Application;
 use Silly\Edition\Pimple\Test\Mock\SpyOutput;
 use Symfony\Component\Console\Input\StringInput;
@@ -17,7 +17,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application;
 
-        $this->assertInstanceOf(Container::class, $app->getContainer());
+        $this->assertInstanceOf(PimpleInterop::class, $app->getContainer());
     }
 
     /**
@@ -25,7 +25,7 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_accept_the_container_in_the_constructor()
     {
-        $container = new Container;
+        $container = new PimpleInterop;
 
         $app = new Application('name', 'version', $container);
 
@@ -37,15 +37,16 @@ class ApplicationTest extends \PHPUnit_Framework_TestCase
      */
     public function it_should_inject_in_callables_parameters()
     {
-        $container = new Container;
+        $container = new PimpleInterop;
 
         $app = new Application('name', 'version', $container);
         $app->setAutoExit(false);
         $app->setCatchExceptions(false);
 
         $container['foo'] = 'bar';
+        $container['Interop\Container\Pimple\PimpleInterop'] = $container;
 
-        $app->command('greet', function (Out $output, Container $container, $foo) use ($app) {
+        $app->command('greet', function (Out $output, PimpleInterop $container, $foo) use ($app) {
             if ($container !== $app->getContainer()) {
                 throw new \Exception('Not the same instance');
             }

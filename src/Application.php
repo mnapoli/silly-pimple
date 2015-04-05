@@ -2,7 +2,7 @@
 
 namespace Silly\Edition\Pimple;
 
-use Pimple\Container;
+use Interop\Container\Pimple\PimpleInterop;
 
 /**
  * Silly CLI application using Pimple.
@@ -11,11 +11,11 @@ use Pimple\Container;
  */
 class Application extends \Silly\Application
 {
-    public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN', Container $container = null)
+    public function __construct($name = 'UNKNOWN', $version = 'UNKNOWN', PimpleInterop $container = null)
     {
         parent::__construct($name, $version);
 
-        $container = $container ?: new Container;
+        $container = $container ?: new PimpleInterop;
 
         $this->useContainer($container, true, true);
     }
